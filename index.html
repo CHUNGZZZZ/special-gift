@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>20/10 ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="description" content="Một món quà đặc biệt...">
+    <link rel="icon" href="assets/images/logo_ready.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/images/logo_ready.png">
+
+    <!-- Google Fonts & Preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@500;600;700&family=Pacifico&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/fonts/Pacifico-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="assets/images/second/book_bg.png" as="image">
+    <link rel="preload" href="assets/images/second/book_bg_back.png" as="image">
+    <link rel="preload" href="assets/images/intro/shooting_heart.gif" as="image">
+    <link rel="preload" href="assets/images/intro/left_cupid.png" as="image">
+    <link rel="preload" href="assets/images/intro/right_cupid.png" as="image">
+    <link rel="preload" href="assets/images/intro/double_heart.png" as="image">
+    <link rel="preload" href="assets/images/second/gift-box.png" as="image">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css?v=2.3">
+
+    <script>
+    // Hàm đóng overlay sẵn sàng tức thì (hoạt động ngay cả khi các script phía dưới đang tải)
+    window.dismissReadyOverlay = function() {
+        var overlay = document.getElementById("readyToStartOverlay");
+        if (overlay) {
+            overlay.style.opacity = "0";
+            overlay.style.pointerEvents = "none";
+            overlay.style.transition = "opacity 0.35s ease";
+            setTimeout(function() {
+                overlay.style.display = "none";
+            }, 350);
+        }
+        window.readyOverlayDismissed = true;
+        window.userHasClickedReady = true;
+        if (window.backgroundMusic) {
+            window.backgroundMusic.play().catch(function(e){ console.warn(e); });
+        }
+        var bgVideo = document.getElementById("backgroundVideo");
+        if (bgVideo && bgVideo.paused) {
+            bgVideo.muted = true;
+            bgVideo.play().catch(function(e){ console.warn(e); });
+        }
+        if (typeof window.startIntroAnimation === 'function') {
+            window.startIntroAnimation();
+        }
+        // Hiện nút mở sổ sau 1.2s để người dùng có thể mở ngay nếu muốn
+        setTimeout(function() {
+            if (typeof window.showOpenBookButton === 'function') {
+                window.showOpenBookButton();
+            }
+        }, 1200);
+    };
+    </script>
+
+    <!-- Three.js Offline Importmap -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js",
+        "three/addons/": "./vendor/jsm/"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- ============================================================
+         MÀN HÌNH 1: PHẦN MỞ ĐẦU (GIFT FOR YOU INTRO)
+         ============================================================ -->
+    <div id="introScreen">
+        <video id="backgroundVideo" autoplay loop muted playsinline webkit-playsinline preload="auto" poster="assets/background_intro_poster.jpg">
+            <source id="videoSource" src="assets/background_intro.mp4" type="video/mp4">
+        </video>
+        <canvas id="canvas"></canvas>
+
+        <div id="rotateNotice" style="display:none;"></div>
+
+        <div id="readyToStartOverlay" class="ready-overlay" onclick="if(typeof dismissReadyOverlay==='function')dismissReadyOverlay();">
+            <div class="ready-overlay-inner">
+                <img class="ready-overlay-logo" src="assets/images/logo_ready.png" alt="Logo" />
+                <p class="ready-overlay-hint" role="note">
+                    Chạm nút bên dưới để mở món quà đặc biệt ❤️
+                </p>
+                <button type="button" id="readyToStartBtn" class="ready-to-start-btn" aria-label="Bắt đầu" onclick="if(typeof dismissReadyOverlay==='function')dismissReadyOverlay();">
+                    Sẵn sàng ❤️
+                </button>
+            </div>
+        </div>
+
+        <img id="leftCupid" src="assets/images/intro/left_cupid.png" alt="Left Cupid" />
+        <img id="rightCupid" src="assets/images/intro/right_cupid.png" alt="Right Cupid" />
+        <img id="doubleHeart" src="assets/images/intro/double_heart.png" alt="Double Heart" />
+        <div id="doubleHeartGlow" class="double-heart-glow" style="display:none;" aria-hidden="true"></div>
+        
+
+        <img id="leftBottom" src="assets/images/intro/left_bottom.png" alt="Left Bottom" />
+        <img id="rightBottom" src="assets/images/intro/right_bottom.png" alt="Right Bottom" />
+        <img id="bear" src="assets/images/intro/shooting_heart.gif" alt="Bear" />
+
+        <button type="button" id="openBookBtn" class="open-book-btn" aria-label="Mở sổ" style="display: none;" onclick="if(typeof enterBookMode==='function')enterBookMode();">
+            <img class="open-book-arrow" src="assets/images/second/arrow.png" alt="">
+            <img src="assets/images/second/book.png" alt="">
+            <span>Chạm để mở sổ ❤️</span>
+        </button>
+
+        <button type="button" id="btnDirectSphereIntro" class="direct-sphere-badge" onclick="if(typeof openSphereScreen==='function')openSphereScreen();" title="Xem quả cầu 3D ngay">
+            🔮 Xem quả cầu 3D
+        </button>
+    </div>
+
+    <!-- ============================================================
+         MÀN HÌNH 2: CUỐN SỔ KỶ NIỆM 3D (FLIPBOOK)
+         ============================================================ -->
+    <div id="secondScreen" aria-hidden="true">
+        <!-- Nút điều hướng lật trang trước / sau -->
+        <button type="button" id="bookPrevBtn" class="book-nav-btn prev-btn" aria-label="Trang trước" title="Trang trước">◀</button>
+        <button type="button" id="bookNextBtn" class="book-nav-btn next-btn" aria-label="Trang sau" title="Trang sau">▶</button>
+
+        <div class="container" id="container">
+            <div class="book-content trnsf-reset">
+                <!-- Được khởi tạo tự động từ config.js -->
+            </div>
+            <div class="page-indicator" id="pageIndicator">
+                <span id="currentPage">1</span> / <span id="totalPages">5</span>
+            </div>
+        </div>
+
+        <!-- Nút chuyển trực tiếp sang quả cầu khi đang ở cuốn sổ -->
+        <button type="button" id="btnDirectSphereBook" class="direct-sphere-book-btn" onclick="if(typeof openSphereScreen==='function')openSphereScreen();">
+            <span>Khám phá Quả Cầu 3D</span> 🔮
+        </button>
+    </div>
+
+    <!-- ============================================================
+         HỘP QUÀ TẶNG CUỐI SỔ (GIFT BOX POPUP - ĐỘC LẬP TẦNG Z-INDEX CAO NHẤT)
+         ============================================================ -->
+    <div id="giftBoxContainer" class="gift-box-container" style="display:none;">
+        <div id="giftBoxGlow" class="double-heart-glow" style="display:none;" aria-hidden="true"></div>
+        <img id="giftBox" class="gift-box-img" src="assets/images/second/gift-box.png" alt="Gift Box" onclick="if(typeof openSphereScreen==='function')openSphereScreen();" />
+        <button type="button" id="openSphereBtn" class="open-sphere-cta-btn" onclick="if(typeof openSphereScreen==='function')openSphereScreen();">
+            ✨ Mở Quả Cầu Kỷ Niệm 🔮
+        </button>
+    </div>
+
+    <!-- ============================================================
+         MÀN HÌNH 3: QUẢ CẦU ẢNH 3D & DÒNG CHỮ BAY LƯỢN (SPHERE & WISHES)
+         ============================================================ -->
+    <div id="sphereScreen" aria-hidden="true">
+        <canvas id="sphereCanvas"></canvas>
+        <div id="sphere-particles-bg"></div>
+        <div id="sphere-click-hint">Click vào quả cầu nhé ✨</div>
+        <button id="btn-flying-corner" type="button">Xem thư 💌</button>
+    </div>
+
+    <!-- ============================================================
+         LÁ THƯ TÂM SỰ & CHIM CUPID BAY (CUPID LETTER MODAL)
+         ============================================================ -->
+    <div id="cupid-letter-overlay">
+        <img id="cupid-flying-img" src="assets/images/letters/cupidletter.png" alt="Cupid" style="display:none;">
+        <img id="letter-envelope-img" src="assets/images/letters/letterimage.png" alt="Phong bì" style="display:none;">
+        <div id="cupid-letter-frame">
+            <button class="letter-close-btn" id="letterCloseBtn" type="button" aria-label="Đóng thư">✕</button>
+            <div class="letter-title" id="letterTitle">Gửi Hương Giang ❤️</div>
+            <div class="letter-content" id="letterContent"></div>
+        </div>
+    </div>
+
+    <!-- 1. Nạp file cấu hình dữ liệu -->
+    <script src="config.js?v=2.3"></script>
+
+    <!-- 2. Khởi tạo dữ liệu và render các trang sách -->
+    <script>
+        (function() {
+            var data = window.GIFT_DATA || {};
+
+            // A. Khởi tạo tên và chủ đề cho intro (hỗ trợ xuống dòng \n để bố cục chữ cân đối)
+            if (data.intro) {
+                var rawTopic = String(data.intro.topic || 'Happy Valentine').trim();
+                var topicLines = rawTopic.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+                var textArr = topicLines.length ? topicLines : ['Happy Valentine'];
+                if (data.intro.recipientName) {
+                    var name = String(data.intro.recipientName).trim();
+                    if (name) textArr.push(name + " ❤️");
+                }
+                window.fullText = textArr;
+            }
+
+            // B. Khởi tạo nhạc nền
+            if (data.intro && data.intro.backgroundMusic && data.intro.backgroundMusic.url) {
+                var audio = new Audio(data.intro.backgroundMusic.url);
+                audio.loop = true;
+                audio.volume = 0.7;
+                window.backgroundMusic = audio;
+            }
+
+            // C. Render các trang sách ngay vào DOM
+            var pages = (data.book && Array.isArray(data.book.pages)) ? data.book.pages : [];
+            var bookContent = document.querySelector('.book-content');
+            if (bookContent && pages.length) {
+                bookContent.innerHTML = '';
+                var recipient = (data.intro && data.intro.recipientName) ? data.intro.recipientName : 'Em';
+
+                // Bìa trước (Book 0)
+                var bCover = document.createElement('div');
+                bCover.className = 'book';
+                bCover.innerHTML = '<div class="face-front" id="portada">' +
+                                   '  <div class="cover-inner">' +
+                                   '    <div class="cover-badge">✨ Kỷ Niệm Yêu Thương ✨</div>' +
+                                   '    <h2 class="cover-title">Cuốn Sổ Kỷ Niệm</h2>' +
+                                   '    <p class="cover-subtitle">Dành tặng ' + recipient + ' ❤️</p>' +
+                                   '    <div class="cover-divider"></div>' +
+                                   '    <div class="cover-hint">Chạm để mở trang 📖</div>' +
+                                   '  </div>' +
+                                   '</div>' +
+                                   '<div class="face-back" id="trsf">' +
+                                   '  <div class="page-badge">Kỷ niệm #1</div>' +
+                                   '  <div class="page-text">' + (pages[0].text || '') + '</div>' +
+                                   '</div>';
+                bookContent.appendChild(bCover);
+
+                // Các trang nội dung ở giữa
+                for (var i = 0; i < pages.length - 1; i++) {
+                    var bMid = document.createElement('div');
+                    bMid.className = 'book';
+                    var curImg = pages[i].image || 'assets/images/second/bookPortada.jpg';
+                    var nextTxt = pages[i + 1].text || '';
+                    bMid.innerHTML = '<div class="face-front">' +
+                                     '  <div class="page-image-wrapper">' +
+                                     '    <img class="page-image" src="' + curImg + '" alt="Kỷ niệm ' + (i + 1) + '">' +
+                                     '  </div>' +
+                                     '</div>' +
+                                     '<div class="face-back">' +
+                                     '  <div class="page-badge">Kỷ niệm #' + (i + 2) + '</div>' +
+                                     '  <div class="page-text">' + nextTxt + '</div>' +
+                                     '</div>';
+                    bookContent.appendChild(bMid);
+                }
+
+                // Trang cuối + Bìa sau
+                var bLast = document.createElement('div');
+                bLast.className = 'book';
+                var lastImg = pages[pages.length - 1].image || 'assets/images/second/bookPortada.jpg';
+                bLast.innerHTML = '<div class="face-front">' +
+                                  '  <div class="page-image-wrapper">' +
+                                  '    <img class="page-image" src="' + lastImg + '" alt="Kỷ niệm ' + pages.length + '">' +
+                                  '  </div>' +
+                                  '</div>' +
+                                  '<div class="face-back" id="portada-back">' +
+                                  '  <div class="back-cover-inner">' +
+                                  '    <div class="cover-badge">✨ Món Quà Cuối Cùng ✨</div>' +
+                                  '    <h3 class="back-cover-title">Và điều bất ngờ...</h3>' +
+                                  '    <p class="back-cover-text">Vẫn còn một điều kỳ diệu đang chờ ở phía trước 🎁</p>' +
+                                  '  </div>' +
+                                  '</div>';
+                bookContent.appendChild(bLast);
+
+                var totalPagesEl = document.getElementById('totalPages');
+                if (totalPagesEl) totalPagesEl.textContent = pages.length;
+            }
+        })();
+    </script>
+
+    <!-- 3. Nạp script logic Intro -->
+    <script src="js/intro.js?v=2.3"></script>
+
+    <!-- 4. Nạp script tương tác lật sách 3D -->
+    <script src="js/book.js?v=2.3"></script>
+
+    <!-- 5. Nạp script quả cầu 3D & dòng chữ chúc bay lượn -->
+    <script type="module" src="js/sphere.js?v=2.3"></script>
+
+</body>
+</html>

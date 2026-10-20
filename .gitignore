@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary test images & profiles
+stage*.png
+flow_*.png
+verify_*.png
+test_*.png

@@ -1,0 +1,1010 @@
+@font-face {
+    font-family: 'Pacifico';
+    src: url('assets/fonts/Pacifico-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PacificoLocal';
+    src: url('assets/fonts/Pacifico-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #050208;
+    color: #fff;
+    font-family: 'Pacifico', cursive, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   1. MÀN HÌNH 1: INTRO SCREEN
+   ═══════════════════════════════════════════════════════════════ */
+#introScreen {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 10;
+    background: #fce4ec url('assets/background_intro_poster.jpg') no-repeat center center / cover;
+    transition: opacity 0.8s ease;
+}
+
+#backgroundVideo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 1;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: block;
+}
+
+/* Cupids & Decorations */
+#leftCupid {
+    position: absolute;
+    top: 1vh;
+    left: 2vw;
+    max-width: clamp(100px, 14vw, 190px);
+    height: auto;
+    z-index: 15;
+    pointer-events: none;
+}
+
+#rightCupid {
+    position: absolute;
+    top: 1vh;
+    right: 2vw;
+    max-width: clamp(100px, 14vw, 190px);
+    height: auto;
+    z-index: 15;
+    pointer-events: none;
+}
+
+#doubleHeart {
+    position: absolute;
+    top: 0.5vh;
+    left: 50%;
+    transform: translateX(-50%) scale(0.6);
+    max-width: 220px;
+    height: auto;
+    z-index: 14;
+    pointer-events: none;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+.double-heart-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 105, 180, 0.6) 0%, rgba(255, 20, 147, 0.2) 50%, transparent 70%);
+    pointer-events: none;
+    filter: blur(20px);
+    z-index: 13;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+.double-heart-glow.show {
+    opacity: 1;
+}
+
+#leftBottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: scale(0.28);
+    transform-origin: bottom left;
+    pointer-events: none;
+    z-index: 12;
+}
+
+#rightBottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: scale(0.28);
+    transform-origin: bottom right;
+    pointer-events: none;
+    z-index: 12;
+}
+
+#bear {
+    position: absolute;
+    left: 20px;
+    bottom: 30px;
+    width: 80px;
+    z-index: 16;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.2s ease;
+}
+#bear.loaded {
+    opacity: 1;
+}
+#bear:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+/* Nút mở cuốn sổ */
+.open-book-btn {
+    position: absolute;
+    bottom: 2.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ffd1dc, #ffb6c1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), 0 0 40px rgba(255, 20, 147, 0.35);
+    transition: opacity 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 50;
+    animation: openBookBtnPulse 2s ease-in-out infinite;
+}
+.open-book-btn:hover {
+    transform: translateX(-50%) scale(1.06);
+    box-shadow: 0 0 28px rgba(255, 105, 180, 0.8), 0 0 50px rgba(255, 20, 147, 0.5);
+}
+.open-book-btn:active {
+    transform: translateX(-50%) scale(0.96);
+}
+.open-book-arrow {
+    display: block;
+    width: 26px;
+    height: auto;
+}
+.open-book-btn img:not(.open-book-arrow) {
+    display: block;
+    width: 32px;
+    height: auto;
+}
+.open-book-btn span {
+    color: #c2185b;
+    font-size: 17px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes openBookBtnPulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        box-shadow: 0 0 18px rgba(255, 105, 180, 0.6);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.05);
+        box-shadow: 0 0 30px rgba(255, 20, 147, 0.8), 0 0 50px rgba(255, 105, 180, 0.5);
+    }
+}
+
+/* Sẵn sàng Overlay */
+.ready-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: linear-gradient(160deg, #ffe4ec 0%, #ffc0cb 35%, #ffb6c1 70%, #ff9ebb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+    pointer-events: auto;
+}
+.ready-overlay-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    pointer-events: auto;
+}
+.ready-overlay-logo {
+    max-width: 190px;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 6px 16px rgba(255, 105, 180, 0.4));
+    pointer-events: none;
+}
+.ready-overlay-hint {
+    margin: 0;
+    max-width: 320px;
+    font-family: 'Pacifico', cursive;
+    font-size: 16px;
+    color: #ad1457;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+}
+.ready-to-start-btn {
+    padding: 13px 34px;
+    font-size: 18px;
+    font-family: 'Pacifico', cursive;
+    color: white;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    pointer-events: auto;
+    position: relative;
+    z-index: 9999;
+}
+.ready-to-start-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 26px rgba(255, 20, 147, 0.7);
+}
+.ready-to-start-btn:active {
+    transform: scale(0.96);
+}
+
+/* Gift Box xuất hiện ở cuối sách */
+.gift-box-container {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(27, 7, 34, 0.7) 0%, rgba(5, 2, 8, 0.9) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: auto;
+    transition: opacity 0.8s ease;
+}
+.gift-box-container.show {
+    display: flex;
+}
+
+#giftBox {
+    width: clamp(240px, 32vw, 360px);
+    height: auto;
+    cursor: pointer;
+    filter: drop-shadow(0 10px 30px rgba(255, 20, 147, 0.8));
+    animation: giftBoxFloat 3s ease-in-out infinite;
+    position: relative;
+    z-index: 502;
+    pointer-events: auto;
+}
+@keyframes giftBoxFloat {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.05) translateY(-12px); }
+}
+
+.open-sphere-cta-btn {
+    margin-top: 24px;
+    padding: 14px 36px;
+    font-size: 19px;
+    font-family: 'Pacifico', cursive;
+    color: #fff;
+    background: linear-gradient(135deg, #ff1493, #ff69b4, #9400d3);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 20, 147, 0.8), 0 0 50px rgba(148, 0, 211, 0.5);
+    position: relative;
+    z-index: 503;
+    pointer-events: auto;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: openSpherePulse 2s infinite ease-in-out;
+}
+.open-sphere-cta-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(255, 20, 147, 1), 0 0 70px rgba(255, 105, 180, 0.8);
+}
+@keyframes openSpherePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Nút chuyển trực tiếp sang quả cầu khi đang ở cuốn sổ */
+.direct-sphere-book-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 28px;
+    z-index: 150;
+    padding: 11px 22px;
+    background: rgba(255, 20, 147, 0.85);
+    color: white;
+    font-family: 'Pacifico', cursive;
+    font-size: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(255, 20, 147, 0.5);
+    transition: transform 0.2s, background 0.2s;
+    pointer-events: auto;
+}
+.direct-sphere-book-btn:hover {
+    transform: scale(1.08);
+    background: rgba(255, 20, 147, 1);
+}
+
+/* Badge chuyển nhanh ở Intro */
+.direct-sphere-badge {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    z-index: 80;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #c2185b;
+    font-family: 'Pacifico', cursive;
+    font-size: 14px;
+    border: 1.5px solid rgba(255, 105, 180, 0.6);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.direct-sphere-badge:hover {
+    background: rgba(255, 105, 180, 0.85);
+    color: white;
+    transform: scale(1.05);
+}
+
+#giftBoxGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 105, 180, 0.7) 0%, rgba(255, 20, 147, 0.25) 50%, transparent 70%);
+    z-index: 501;
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(25px);
+    transition: opacity 0.8s ease;
+}
+#giftBoxGlow.show {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. MÀN HÌNH 2: CUỐN SỔ KỶ NIỆM 3D (SECOND SCREEN)
+   ═══════════════════════════════════════════════════════════════ */
+#secondScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    perspective: 2000px;
+    background: radial-gradient(circle at center, rgba(40, 10, 30, 0.85) 0%, rgba(10, 2, 8, 0.95) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+#secondScreen.is-visible {
+    display: flex;
+}
+
+body.book-mode #canvas {
+    display: none !important;
+}
+body.book-mode #openBookBtn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+#secondScreen .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.book-content {
+    position: relative;
+    width: clamp(300px, 44vw, 440px);
+    height: clamp(400px, 62vh, 580px);
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+    transform-style: preserve-3d;
+}
+.book-content.trnsf-reset {
+    transform: translateX(0);
+}
+.book-content.trnsf {
+    transform: translateX(35%);
+}
+.book-content.trnsf-final {
+    transform: translateX(45%);
+}
+.book-content.hide-for-gift {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.book {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.face-front, .face-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.face-front {
+    box-shadow: inset 8px 0 20px rgba(0, 0, 0, 0.25);
+    background-size: cover;
+    background-position: center;
+}
+
+.face-back {
+    transform: translateZ(-1px) rotateY(180deg);
+    background: #fff8fa url('assets/images/second/book_bg_back.png') no-repeat center center / cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 4vw, 36px);
+    box-shadow: inset -8px 0 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Bìa trước trang trọng */
+#portada {
+    background: #ffb6c1 url('assets/images/second/book_bg.png') no-repeat center center / cover;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.3), 0 10px 25px rgba(255, 105, 180, 0.4);
+}
+.cover-inner {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 26px 20px;
+    border-radius: 18px;
+    border: 2px dashed rgba(255, 20, 147, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 88%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+.cover-badge {
+    background: linear-gradient(135deg, #ff1493, #ff69b4);
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-family: 'Pacifico', cursive;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(255, 20, 147, 0.4);
+}
+.cover-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(20px, 3vw, 26px);
+    color: #c2185b;
+    margin: 4px 0 0 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+.cover-subtitle {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(14px, 2vw, 17px);
+    color: #ad1457;
+    margin: 0;
+}
+.cover-divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ff1493, transparent);
+    margin: 4px 0;
+}
+.cover-hint {
+    margin-top: 6px;
+    font-size: 14px;
+    background: linear-gradient(135deg, #ff1493, #ff69b4);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-family: 'Pacifico', cursive;
+    box-shadow: 0 4px 14px rgba(255, 20, 147, 0.45);
+    animation: coverHintPulse 1.8s infinite;
+}
+@keyframes coverHintPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* Page badge on back of pages */
+.page-badge {
+    display: inline-block;
+    background: rgba(255, 105, 180, 0.2);
+    color: #c2185b;
+    border: 1px solid rgba(255, 105, 180, 0.5);
+    border-radius: 999px;
+    padding: 2px 14px;
+    font-family: 'Pacifico', cursive;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+/* Bìa sau */
+#portada-back {
+    background: #ffb6c1 url('assets/images/second/book_bg_back.png') no-repeat center center / cover;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+}
+.back-cover-inner {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 24px;
+    border-radius: 18px;
+    border: 2px dashed rgba(255, 20, 147, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 88%;
+}
+.back-cover-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 22px;
+    color: #c2185b;
+    margin: 0;
+}
+.back-cover-text {
+    font-family: 'Pacifico', cursive;
+    font-size: 15px;
+    color: #880e4f;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Ảnh trang trong sách */
+.page-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff0f5;
+    padding: 12px;
+    box-sizing: border-box;
+}
+.page-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+/* Chữ trong trang sách */
+.page-text {
+    width: 100%;
+    max-height: 85%;
+    overflow-y: auto;
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(14px, 1.8vw, 18px);
+    line-height: 1.8;
+    color: #880e4f;
+    text-align: center;
+    white-space: pre-wrap;
+    padding: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #f48fb1 transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+/* Nút lật trang điều hướng trái/phải */
+.book-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 110;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ff69b4;
+    color: #ff1493;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(255, 20, 147, 0.35);
+    transition: all 0.2s ease;
+}
+.book-nav-btn:hover {
+    background: #ff1493;
+    color: #fff;
+    transform: translateY(-50%) scale(1.12);
+}
+.book-nav-btn.prev-btn {
+    left: clamp(16px, 4vw, 48px);
+}
+.book-nav-btn.next-btn {
+    right: clamp(16px, 4vw, 48px);
+}
+
+/* Page indicator */
+.page-indicator {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 20px;
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.4);
+    font-family: 'Pacifico', cursive;
+    font-size: 15px;
+    color: #c2185b;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.page-indicator.show {
+    opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. MÀN HÌNH 3: QUẢ CẦU ẢNH 3D & DÒNG CHỮ BAY LƯỢN (SPHERE SCREEN)
+   ═══════════════════════════════════════════════════════════════ */
+#sphereScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #1b0722 0%, #050208 100%);
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+#sphereScreen.is-visible {
+    display: block;
+    opacity: 1;
+}
+
+#sphereCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 1;
+}
+
+/* Gợi ý click quả cầu */
+#sphere-click-hint {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 300;
+    padding: 12px 28px;
+    background: rgba(45, 10, 35, 0.75);
+    color: #ffffff;
+    font-size: clamp(15px, 2.2vw, 19px);
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.3s ease;
+    font-family: "Pacifico", cursive;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 182, 193, 0.4);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+}
+#sphere-click-hint.visible {
+    opacity: 1;
+}
+
+/* Nút mở lá thư ở góc phải */
+#btn-flying-corner {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 310;
+    display: none;
+    padding: 12px 22px;
+    font-size: 18px;
+    font-family: "Pacifico", cursive;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(255, 105, 180, 0.6);
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s ease;
+    animation: openBookBtnPulse 2.4s ease-in-out infinite;
+}
+#btn-flying-corner.visible {
+    display: block;
+}
+#btn-flying-corner:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 26px rgba(255, 20, 147, 0.8);
+}
+
+/* Hạt bụi CSS lơ lửng */
+#sphere-particles-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.sp-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 105, 180, 0.6);
+    border-radius: 50%;
+    animation: spFloat 14s infinite ease-in-out;
+}
+@keyframes spFloat {
+    0%, 100% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.9;
+    }
+    85% {
+        opacity: 0.9;
+    }
+    95%, 100% {
+        transform: translateY(-10vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes flashFade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. LÁ THƯ TÂM SỰ & CHIM CUPID BAY (LETTER OVERLAY)
+   ═══════════════════════════════════════════════════════════════ */
+#cupid-letter-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 600;
+    background: rgba(15, 3, 12, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+#cupid-letter-overlay.visible {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+#cupid-flying-img {
+    position: fixed;
+    width: clamp(140px, 22vw, 240px);
+    height: auto;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 610;
+    filter: drop-shadow(0 10px 20px rgba(255, 105, 180, 0.7));
+}
+
+#letter-envelope-img {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(150px, 26vw, 260px);
+    height: auto;
+    cursor: pointer;
+    display: none;
+    z-index: 615;
+    transition: transform 0.25s ease;
+    filter: drop-shadow(0 12px 30px rgba(255, 105, 180, 0.8));
+}
+#letter-envelope-img.visible {
+    display: block;
+    animation: cupidLetterFadeIn 0.5s ease-out;
+}
+#letter-envelope-img:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+#cupid-letter-frame {
+    position: relative;
+    width: min(90vw, 620px);
+    max-height: 85vh;
+    display: none;
+    flex-direction: column;
+    z-index: 620;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(255, 20, 147, 0.45), 0 0 0 3px rgba(255, 182, 193, 0.6);
+    background: linear-gradient(135deg, #fff5f8 0%, #ffe4ec 50%, #ffd1dc 100%);
+    padding: clamp(24px, 4vw, 40px);
+    border: 2px solid #ff69b4;
+}
+#cupid-letter-frame.visible {
+    display: flex !important;
+    animation: cupidLetterPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes cupidLetterPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.letter-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(22px, 3.2vw, 28px);
+    color: #ad1457;
+    margin: 0 0 16px 0;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#cupid-letter-frame .letter-content {
+    font-family: "PacificoLocal", "Pacifico", cursive;
+    font-size: clamp(16px, 2.2vw, 20px);
+    line-height: 1.85;
+    color: #880e4f;
+    text-align: center;
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-y: auto;
+    max-height: 55vh;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: #f48fb1 transparent;
+}
+
+.letter-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    color: #ad1457;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, background 0.2s;
+}
+.letter-close-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+@keyframes cupidLetterFadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    #leftCupid, #rightCupid {
+        max-width: 80px;
+    }
+    #bear {
+        width: 60px;
+        left: 10px;
+        bottom: 20px;
+    }
+    .open-book-btn {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+    #btn-flying-corner {
+        bottom: 16px;
+        right: 16px;
+        font-size: 16px;
+        padding: 10px 18px;
+    }
+}
